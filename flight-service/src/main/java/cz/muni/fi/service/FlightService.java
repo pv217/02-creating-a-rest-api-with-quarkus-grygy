@@ -20,7 +20,7 @@ public class FlightService {
      * @return list of all flights
      */
     public List<Flight> listAll() {
-        // TODO implement this method
+        return flights.values().stream().toList();
     }
 
     /**
@@ -31,7 +31,10 @@ public class FlightService {
      * @throws IllegalArgumentException if flight with given id does not exist
      */
     public Flight getFlight(int id) {
-        // TODO implement this method
+        if (flights.get(id) == null) {
+            throw new IllegalArgumentException("Flight with id " + id + " does not exist");
+        }
+        return flights.get(id);
     }
 
     /**
@@ -42,7 +45,11 @@ public class FlightService {
      * @throws IllegalArgumentException if flight with given id already exists
      */
     public Flight createFlight(Flight flight) {
-        // TODO implement this method
+        if (flights.get(flight.id) != null) {
+            throw new IllegalArgumentException("Flight with id " + flight.id + " already exists");
+        }
+        flights.put(flight.id, flight);
+        return flight;
     }
 
     /**
@@ -53,7 +60,11 @@ public class FlightService {
      * @throws IllegalArgumentException if flight with given id does not exist
      */
     public Flight updateFlight(Flight flight) {
-        // TODO implement this method
+        if (flights.get(flight.id) == null) {
+            throw new IllegalArgumentException("Flight with id " + flight.id + " does not exist");
+        }
+        flights.put(flight.id, flight);
+        return flight;
     }
 
     /**
@@ -63,13 +74,16 @@ public class FlightService {
      * @throws IllegalArgumentException if flight with given id does not exist
      */
     public void deleteFlight(int id) {
-        // TODO implement this method
+        if (flights.get(id) == null) {
+            throw new IllegalArgumentException("Flight with id " + id + " does not exist");
+        }
+        flights.remove(id);
     }
 
     /**
      * Delete all flights
      */
     public void deleteAllFlights() {
-        // TODO implement this method
+        flights.clear();
     }
 }
