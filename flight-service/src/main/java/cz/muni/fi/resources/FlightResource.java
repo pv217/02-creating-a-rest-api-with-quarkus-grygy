@@ -35,7 +35,7 @@ public class FlightResource {
     @GET // This method process GET requests on /flight
     @Produces(MediaType.APPLICATION_JSON) // This will set Content-Type header to application/json
     public List<Flight> list() {
-        // TODO implement this method
+        return flightService.listAll();
     }
 
     /**
@@ -48,7 +48,12 @@ public class FlightResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON) // This will indicate that this method consumes JSON
     public RestResponse<Flight> create(Flight flight) { // Converts JSON from request body to Flight object
-        // TODO implement this method
+        try {
+            var newFlight = flightService.createFlight(flight);
+            return RestResponse.status(Response.Status.CREATED, newFlight);
+        } catch (IllegalArgumentException e) {
+            return RestResponse.status(Response.Status.CONFLICT);
+        }
     }
 
 
@@ -62,7 +67,12 @@ public class FlightResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<Flight> get(@PathParam("id") int id) {
-        // TODO implement this method
+        try {
+            var flight = flightService.getFlight(id);
+            return RestResponse.status(Response.Status.OK, flight);
+        } catch (IllegalArgumentException e) {
+            return RestResponse.status(Response.Status.NOT_FOUND);
+        }
     }
 
 
@@ -77,7 +87,15 @@ public class FlightResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public RestResponse<Flight> update(@PathParam("id") int id, Flight flight) {
-        // TODO implement this method
+        if (flight.id != id) {
+            return RestResponse.status(Response.Status.BAD_REQUEST);
+        }
+        try {
+            var updatedFlight = flightService.updateFlight(flight);
+            return RestResponse.status(Response.Status.OK, updatedFlight);
+        } catch (IllegalArgumentException e) {
+            return RestResponse.status(Response.Status.NOT_FOUND);
+        }
     }
 
     /**
